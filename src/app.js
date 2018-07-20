@@ -18,7 +18,16 @@ const onFormSubmit = (e) => {
     }
 }
 
-const removeAll = () => {
+const onShuffle = () => {
+    const randomNumber = Math.floor(Math.random() * app.options.length)
+    const selectedOption = app.options[randomNumber]
+
+    if(selectedOption) {
+        alert(selectedOption)
+    }
+}
+
+const onRemoveAll = () => {
     app.options = []
     render()
 }
@@ -30,10 +39,10 @@ const render = () => {
             {app.subtitle && <p>{app.subtitle}</p>}
             <p>{app.options && app.options.length > 0 ? 'Here are your options' : 'No options'}</p>
             <p>{app.options.length}</p>
-            <button onClick={removeAll}>Remove All</button>
+            <button disabled={app.options.length === 0} onClick={onShuffle}>Make your pick</button>
+            <button onClick={onRemoveAll}>Remove All</button>
             <ol>
-                <li>Item one</li>
-                <li>Item two</li>
+                {app.options.map((option) => <li key={option}>{option}</li>)}
             </ol>
             <form onSubmit={onFormSubmit}>
                 <input type="text" name="option" />
