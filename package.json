@@ -1,9 +1,4 @@
 {
-  "devDependencies": {
-    "@rise-digital/eslint-config-rise": "^2.2.1",
-    "eslint": "4.19.1",
-    "prettier": "^1.13.7"
-  },
   "name": "react-shuffle-app",
   "version": "1.0.0",
   "main": "index.js",
@@ -12,5 +7,10 @@
   "dependencies": {
     "babel-preset-env": "1.5.2",
     "babel-preset-react": "6.24.1"
+  },
+  "devDependencies": {
+    "@rise-digital/eslint-config-rise": "^2.2.1",
+    "eslint": "4.19.1",
+    "prettier": "^1.13.7"
   }
 }
