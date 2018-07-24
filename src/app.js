@@ -7,18 +7,37 @@ class App extends React.PureComponent {
     }
 
     this.handleAddOption = this.handleAddOption.bind(this)
+    this.handleDeleteOptions = this.handleDeleteOptions.bind(this)
+    this.handlePick = this.handlePick.bind(this)
   }
 
-  handleAddOption(e) {
-    e.preventDefault()
-
-    let option = e.target.elements.option.value.trim()
-
-    if (option) {
-      this.setState({ options: this.state.options.concat([option]) })
-      e.target.elements.option.value = ''
-      console.log(this.state.options)
+  handleAddOption(option) {
+    if (!option) {
+      return 'Enter valid value to add item'
+    } else if (!this.state.options.indexOf(option) > -1) {
+      return 'This option already exists'
     }
+    this.setState((prevState) => {
+      return {
+        options: prevState.options.concat([option]),
+      }
+    })
+  }
+
+  handleDeleteOptions() {
+    this.setState(() => {
+      return {
+        options: [],
+      }
+    })
+  }
+
+  handlePick() {
+    const selectedOptionIndex = Math.floor(
+      Math.random() * this.state.options.length
+    )
+    const selectedOption = this.state.options[selectedOptionIndex]
+    alert(selectedOption)
   }
 
   render() {
@@ -29,8 +48,11 @@ class App extends React.PureComponent {
     return (
       <div>
         <Header title={title} subtitle={subtitle} />
-        <Action />
-        <Options options={options} />
+        <Action hasOptions={options.length > 0} handlePick={this.handlePick} />
+        <Options
+          options={options}
+          handleDeleteOptions={this.handleDeleteOptions}
+        />
         <AddOption handleAddOption={this.handleAddOption} />
       </div>
     )
@@ -51,30 +73,26 @@ class Header extends React.PureComponent {
 }
 
 class Action extends React.PureComponent {
-  handleShuffle() {
-    alert('handleShuffle')
-  }
-
   render() {
+    const { handlePick, hasOptions } = this.props
+
     return (
       <div>
-        <button onClick={this.handleShuffle}>Shuffle</button>
+        <button disabled={!hasOptions} onClick={handlePick}>
+          Shuffle
+        </button>
       </div>
     )
   }
 }
 
 class Options extends React.PureComponent {
-  handleRemoveAll() {
-    alert('handleRemove')
-  }
-
   render() {
-    const { options } = this.props
+    const { handleDeleteOptions, options } = this.props
 
     return (
       <div>
-        <button onClick={this.handleRemoveAll}>Remove all</button>
+        <button onClick={handleDeleteOptions}>Remove all</button>
         {options.map((option) => {
           return <Option option={option} key={option} />
         })}
@@ -92,14 +110,39 @@ class Option extends React.PureComponent {
 }
 
 class AddOption extends React.PureComponent {
-  render() {
-    const { handleAddOption } = this.props
+  constructor(props) {
+    super(props)
 
+    this.state = {
+      error: '',
+    }
+
+    this.handleAddOption = this.handleAddOption.bind(this)
+  }
+
+  handleAddOption(e) {
+    e.preventDefault()
+
+    const option = e.target.elements.option.value.trim()
+    e.target.elements.option.value = ''
+    const error = this.props.handleAddOption(option)
+
+    if (error) {
+      this.setState(() => {
+        return { error }
+      })
+    }
+  }
+
+  render() {
     return (
-      <form onSubmit={handleAddOption}>
-        <input type="text" name="option" />
-        <button>Add Option</button>
-      </form>
+      <div>
+        <form onSubmit={this.handleAddOption}>
+          <input type="text" name="option" />
+          <button>Add Option</button>
+        </form>
+        {this.state.error && <p>{this.state.error}</p>}
+      </div>
     )
   }
 }
