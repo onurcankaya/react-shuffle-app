@@ -3,7 +3,7 @@ class App extends React.PureComponent {
     super(props)
 
     this.state = {
-      options: [1, 3, 5],
+      options: props.options,
     }
 
     this.handleAddOption = this.handleAddOption.bind(this)
@@ -14,22 +14,18 @@ class App extends React.PureComponent {
   handleAddOption(option) {
     if (!option) {
       return 'Enter valid value to add item'
-    } else if (!this.state.options.indexOf(option) > -1) {
+    } else if (this.state.options.indexOf(option) !== -1) {
       return 'This option already exists'
     }
-    this.setState((prevState) => {
-      return {
-        options: prevState.options.concat([option]),
-      }
-    })
+    this.setState((prevState) => ({
+      options: prevState.options.concat([option]),
+    }))
   }
 
   handleDeleteOptions() {
-    this.setState(() => {
-      return {
-        options: [],
-      }
-    })
+    this.setState(() => ({
+      options: [],
+    }))
   }
 
   handlePick() {
@@ -41,13 +37,12 @@ class App extends React.PureComponent {
   }
 
   render() {
-    const title = 'Shuffle'
     const subtitle = 'Put your choice in the hands of a computer'
     const { options } = this.state
 
     return (
       <div>
-        <Header title={title} subtitle={subtitle} />
+        <Header subtitle={subtitle} />
         <Action hasOptions={options.length > 0} handlePick={this.handlePick} />
         <Options
           options={options}
@@ -59,54 +54,46 @@ class App extends React.PureComponent {
   }
 }
 
-class Header extends React.PureComponent {
-  render() {
-    const { title, subtitle } = this.props
-
-    return (
-      <div>
-        <h1>{title}</h1>
-        <h2>{subtitle}</h2>
-      </div>
-    )
-  }
+App.defaultProps = {
+  options: [],
 }
 
-class Action extends React.PureComponent {
-  render() {
-    const { handlePick, hasOptions } = this.props
-
-    return (
-      <div>
-        <button disabled={!hasOptions} onClick={handlePick}>
-          Shuffle
-        </button>
-      </div>
-    )
-  }
+const Header = ({ title, subtitle }) => {
+  return (
+    <div>
+      <h1>{title}</h1>
+      {subtitle && <h2>{subtitle}</h2>}
+    </div>
+  )
 }
 
-class Options extends React.PureComponent {
-  render() {
-    const { handleDeleteOptions, options } = this.props
-
-    return (
-      <div>
-        <button onClick={handleDeleteOptions}>Remove all</button>
-        {options.map((option) => {
-          return <Option option={option} key={option} />
-        })}
-      </div>
-    )
-  }
+Header.defaultProps = {
+  title: 'Shuffle',
 }
 
-class Option extends React.PureComponent {
-  render() {
-    const { option } = this.props
+const Action = ({ handlePick, hasOptions }) => {
+  return (
+    <div>
+      <button disabled={!hasOptions} onClick={handlePick}>
+        Shuffle
+      </button>
+    </div>
+  )
+}
 
-    return <div>{option}</div>
-  }
+const Options = ({ handleDeleteOptions, options }) => {
+  return (
+    <div>
+      <button onClick={handleDeleteOptions}>Remove all</button>
+      {options.map((option) => {
+        return <Option option={option} key={option} />
+      })}
+    </div>
+  )
+}
+
+const Option = ({ option }) => {
+  return <div>{option}</div>
 }
 
 class AddOption extends React.PureComponent {
@@ -124,13 +111,12 @@ class AddOption extends React.PureComponent {
     e.preventDefault()
 
     const option = e.target.elements.option.value.trim()
-    e.target.elements.option.value = ''
     const error = this.props.handleAddOption(option)
 
     if (error) {
-      this.setState(() => {
-        return { error }
-      })
+      this.setState(() => ({ error }))
+    } else {
+      this.setState(() => ({ error: '' }))
     }
   }
 
