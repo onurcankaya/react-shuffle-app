@@ -9,6 +9,7 @@ class App extends React.PureComponent {
     this.handleAddOption = this.handleAddOption.bind(this)
     this.handleDeleteOptions = this.handleDeleteOptions.bind(this)
     this.handlePick = this.handlePick.bind(this)
+    this.handleRemoveOption = this.handleRemoveOption.bind(this)
   }
 
   handleAddOption(option) {
@@ -36,6 +37,12 @@ class App extends React.PureComponent {
     alert(selectedOption)
   }
 
+  handleRemoveOption(selectedOption) {
+    this.setState((prevState) => ({
+      options: prevState.options.filter((option) => option !== selectedOption),
+    }))
+  }
+
   render() {
     const subtitle = 'Put your choice in the hands of a computer'
     const { options } = this.state
@@ -45,8 +52,9 @@ class App extends React.PureComponent {
         <Header subtitle={subtitle} />
         <Action hasOptions={options.length > 0} handlePick={this.handlePick} />
         <Options
-          options={options}
           handleDeleteOptions={this.handleDeleteOptions}
+          handleRemoveOption={this.handleRemoveOption}
+          options={options}
         />
         <AddOption handleAddOption={this.handleAddOption} />
       </div>
@@ -55,7 +63,7 @@ class App extends React.PureComponent {
 }
 
 App.defaultProps = {
-  options: [],
+  options: [1, 3, 5],
 }
 
 const Header = ({ title, subtitle }) => {
@@ -81,19 +89,30 @@ const Action = ({ handlePick, hasOptions }) => {
   )
 }
 
-const Options = ({ handleDeleteOptions, options }) => {
+const Options = ({ handleDeleteOptions, handleRemoveOption, options }) => {
   return (
     <div>
       <button onClick={handleDeleteOptions}>Remove all</button>
       {options.map((option) => {
-        return <Option option={option} key={option} />
+        return (
+          <Option
+            option={option}
+            key={option}
+            handleRemoveOption={handleRemoveOption}
+          />
+        )
       })}
     </div>
   )
 }
 
-const Option = ({ option }) => {
-  return <div>{option}</div>
+const Option = ({ option, handleRemoveOption }) => {
+  return (
+    <div>
+      {option}
+      <button onClick={() => handleRemoveOption(option)}>Remove</button>
+    </div>
+  )
 }
 
 class AddOption extends React.PureComponent {
