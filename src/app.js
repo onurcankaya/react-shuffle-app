@@ -12,6 +12,26 @@ class App extends React.PureComponent {
     this.handleRemoveOption = this.handleRemoveOption.bind(this)
   }
 
+  componentDidMount() {
+    try {
+      const json = window.localStorage.getItem('options')
+      const options = JSON.parse(json)
+
+      if (options) {
+        this.setState(() => ({ options }))
+      }
+    } catch (error) {
+      // do nothing
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.options.length !== this.state.options.length) {
+      const json = JSON.stringify(this.state.options)
+      window.localStorage.setItem('options', json)
+    }
+  }
+
   handleAddOption(option) {
     if (!option) {
       return 'Enter valid value to add item'
@@ -93,6 +113,7 @@ const Options = ({ handleDeleteOptions, handleRemoveOption, options }) => {
   return (
     <div>
       <button onClick={handleDeleteOptions}>Remove all</button>
+      {options.length === 0 && <p>Please add an option to get started.</p>}
       {options.map((option) => {
         return (
           <Option
@@ -132,10 +153,10 @@ class AddOption extends React.PureComponent {
     const option = e.target.elements.option.value.trim()
     const error = this.props.handleAddOption(option)
 
-    if (error) {
-      this.setState(() => ({ error }))
-    } else {
-      this.setState(() => ({ error: '' }))
+    this.setState(() => ({ error }))
+
+    if (!error) {
+      e.target.elements.option.value = ''
     }
   }
 
