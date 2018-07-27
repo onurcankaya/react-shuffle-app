@@ -1,9 +1,12 @@
+import React from 'react'
+import ReactDOM from 'react-dom'
+
 class App extends React.PureComponent {
   constructor(props) {
     super(props)
 
     this.state = {
-      options: props.options,
+      options: [],
     }
 
     this.handleAddOption = this.handleAddOption.bind(this)
@@ -80,10 +83,6 @@ class App extends React.PureComponent {
       </div>
     )
   }
-}
-
-App.defaultProps = {
-  options: [1, 3, 5],
 }
 
 const Header = ({ title, subtitle }) => {
