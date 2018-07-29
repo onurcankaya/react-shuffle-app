@@ -6,17 +6,39 @@ import Header from './Header'
 import Options from './Options'
 
 export default class App extends React.PureComponent {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      options: [],
+  state = {
+    options: [],
+  }
+  
+  handleAddOption = (option) => {
+    if (!option) {
+      return 'Enter valid value to add item'
+    } else if (this.state.options.indexOf(option) !== -1) {
+      return 'This option already exists'
     }
+    this.setState((prevState) => ({
+      options: prevState.options.concat([option]),
+    }))
+  }
 
-    this.handleAddOption = this.handleAddOption.bind(this)
-    this.handleDeleteOptions = this.handleDeleteOptions.bind(this)
-    this.handlePick = this.handlePick.bind(this)
-    this.handleRemoveOption = this.handleRemoveOption.bind(this)
+  handleDeleteOptions = () => {
+    this.setState(() => ({
+      options: [],
+    }))
+  }
+
+  handlePick = () => {
+    const selectedOptionIndex = Math.floor(
+      Math.random() * this.state.options.length
+    )
+    const selectedOption = this.state.options[selectedOptionIndex]
+    alert(selectedOption)
+  }
+
+  handleRemoveOption = (selectedOption) => {
+    this.setState((prevState) => ({
+      options: prevState.options.filter((option) => option !== selectedOption),
+    }))
   }
 
   componentDidMount() {
@@ -37,37 +59,6 @@ export default class App extends React.PureComponent {
       const json = JSON.stringify(this.state.options)
       window.localStorage.setItem('options', json)
     }
-  }
-
-  handleAddOption(option) {
-    if (!option) {
-      return 'Enter valid value to add item'
-    } else if (this.state.options.indexOf(option) !== -1) {
-      return 'This option already exists'
-    }
-    this.setState((prevState) => ({
-      options: prevState.options.concat([option]),
-    }))
-  }
-
-  handleDeleteOptions() {
-    this.setState(() => ({
-      options: [],
-    }))
-  }
-
-  handlePick() {
-    const selectedOptionIndex = Math.floor(
-      Math.random() * this.state.options.length
-    )
-    const selectedOption = this.state.options[selectedOptionIndex]
-    alert(selectedOption)
-  }
-
-  handleRemoveOption(selectedOption) {
-    this.setState((prevState) => ({
-      options: prevState.options.filter((option) => option !== selectedOption),
-    }))
   }
 
   render() {

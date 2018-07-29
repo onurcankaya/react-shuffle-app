@@ -1,17 +1,11 @@
 import React from 'react'
 
 export default class AddOption extends React.PureComponent {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      error: '',
-    }
-
-    this.handleAddOption = this.handleAddOption.bind(this)
+  state = {
+    error: '',
   }
 
-  handleAddOption(e) {
+  handleAddOption = (e) => {
     e.preventDefault()
     const option = e.target.elements.option.value.trim()
     const error = this.props.handleAddOption(option)
