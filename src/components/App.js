@@ -4,10 +4,18 @@ import Action from './Action'
 import AddOption from './AddOption'
 import Header from './Header'
 import Options from './Options'
+import OptionModal from './OptionModal'
 
 export default class App extends React.PureComponent {
   state = {
     options: [],
+    selectedOption: undefined,
+  }
+
+  handleCloseModal = () => {
+    this.setState(() => ({
+      selectedOption: undefined
+    }))
   }
   
   handleAddOption = (option) => {
@@ -32,7 +40,9 @@ export default class App extends React.PureComponent {
       Math.random() * this.state.options.length
     )
     const selectedOption = this.state.options[selectedOptionIndex]
-    alert(selectedOption)
+    this.setState(() => ({
+      selectedOption
+    }))
   }
 
   handleRemoveOption = (selectedOption) => {
@@ -63,7 +73,7 @@ export default class App extends React.PureComponent {
 
   render() {
     const subtitle = 'Put your choice in the hands of a computer'
-    const { options } = this.state
+    const { options, selectedOption } = this.state
 
     return (
       <div>
@@ -74,6 +84,7 @@ export default class App extends React.PureComponent {
           handleRemoveOption={this.handleRemoveOption}
           options={options}
         />
+        <OptionModal handleCloseModal={this.handleCloseModal} selectedOption={selectedOption} />
         <AddOption handleAddOption={this.handleAddOption} />
       </div>
     )
