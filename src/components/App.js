@@ -78,14 +78,16 @@ export default class App extends React.PureComponent {
     return (
       <div>
         <Header subtitle={subtitle} />
-        <Action hasOptions={options.length > 0} handlePick={this.handlePick} />
-        <Options
-          handleDeleteOptions={this.handleDeleteOptions}
-          handleRemoveOption={this.handleRemoveOption}
-          options={options}
-        />
-        <OptionModal handleCloseModal={this.handleCloseModal} selectedOption={selectedOption} />
-        <AddOption handleAddOption={this.handleAddOption} />
+        <div className="container">
+          <Action hasOptions={options.length > 0} handlePick={this.handlePick} />
+          <Options
+            handleDeleteOptions={this.handleDeleteOptions}
+            handleRemoveOption={this.handleRemoveOption}
+            options={options}
+          />
+          <AddOption handleAddOption={this.handleAddOption} />
+          </div>
+          <OptionModal handleCloseModal={this.handleCloseModal} selectedOption={selectedOption} />
       </div>
     )
   }
