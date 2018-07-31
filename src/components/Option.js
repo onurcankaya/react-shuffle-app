@@ -1,9 +1,9 @@
 import React from 'react'
 
-const Option = ({ option, handleRemoveOption }) => {
+const Option = ({ count, handleRemoveOption, option }) => {
   return (
-    <div>
-      {option}
+    <div className="option">
+      <p className="option__text">{`${count}. ${option}`}</p>
       <button
         onClick={() => handleRemoveOption(option)}
         className="button button--link">
