@@ -7,9 +7,14 @@ const OptionModal = ({ handleCloseModal, selectedOption }) => {
       <Modal
         isOpen={!!selectedOption}
         contentLabel="example"
-        onRequestClose={handleCloseModal}>
-        {selectedOption && <p>{selectedOption}</p>}
-        <button onClick={handleCloseModal}>Okay</button>
+        onRequestClose={handleCloseModal}
+        closeTimeoutMS={200}
+        className="modal">
+        <h3 className="modal__title">Selected Option</h3>
+        {selectedOption && <p className="modal__body">{selectedOption}</p>}
+        <button className="button" onClick={handleCloseModal}>
+          Okay
+        </button>
       </Modal>
     </div>
   )
